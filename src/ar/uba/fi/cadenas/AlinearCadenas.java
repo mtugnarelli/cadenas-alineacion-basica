@@ -2,6 +2,7 @@ package ar.uba.fi.cadenas;
 
 public class AlinearCadenas {
 
+    public static final char VACIO = '_';
     private String cadena1;
     private String cadena2;
     private Alineacion[][] alineaciones;
@@ -30,14 +31,14 @@ public class AlinearCadenas {
         /* condición inicial para V(i, 0) */
         for (int i = 1; i < alineaciones.length; i++) {
             
-            int valor = alineaciones[i-1][0].valor() + puntaje(cadena1.charAt(i-1), '_');
+            int valor = alineaciones[i-1][0].valor() + puntaje(cadena1.charAt(i-1), VACIO);
             alineaciones[i][0] = new Alineacion( valor );
         }
         
         /* condición inicial para V(0, j) */
         for (int j = 1; j < alineaciones[0].length; j++) {
             
-            int valor = alineaciones[0][j-1].valor() + puntaje('_', cadena2.charAt(j-1));
+            int valor = alineaciones[0][j-1].valor() + puntaje(VACIO, cadena2.charAt(j-1));
             alineaciones[0][j] = new Alineacion( valor );
         }
         
@@ -47,8 +48,8 @@ public class AlinearCadenas {
                 
                 int valor = maximo( 
                                     alineaciones[i-1][j-1].valor() + puntaje(cadena1.charAt(i-1), cadena2.charAt(j-1)),
-                                    alineaciones[i-1][j].valor() + puntaje(cadena1.charAt(i-1), '_'),
-                                    alineaciones[i][j-1].valor() + puntaje('_', cadena2.charAt(j-1))
+                                    alineaciones[i-1][j].valor() + puntaje(cadena1.charAt(i-1), VACIO),
+                                    alineaciones[i][j-1].valor() + puntaje(VACIO, cadena2.charAt(j-1))
                                     );
                 
                 alineaciones[i][j] = new Alineacion( valor );

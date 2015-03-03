@@ -1,8 +1,11 @@
 package ar.uba.fi.cadenas;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class AlinearCadenas {
 
-    public static final char VACIO = '_';
+    public static final char VACIO = '~';
     private String cadena1;
     private String cadena2;
     private Alineacion[][] alineaciones;
@@ -46,13 +49,24 @@ public class AlinearCadenas {
             
             for (int j = 1; j < alineaciones[i].length; j++) {
                 
-                int valor = maximo( 
-                                    alineaciones[i-1][j-1].valor() + puntaje(cadena1.charAt(i-1), cadena2.charAt(j-1)),
-                                    alineaciones[i-1][j].valor() + puntaje(cadena1.charAt(i-1), VACIO),
-                                    alineaciones[i][j-1].valor() + puntaje(VACIO, cadena2.charAt(j-1))
-                                    );
+                int diagonal = alineaciones[i-1][j-1].valor() + puntaje(cadena1.charAt(i-1), cadena2.charAt(j-1));
+                int anterior = alineaciones[i-1][ j ].valor() + puntaje(cadena1.charAt(i-1), VACIO);
+                int superior = alineaciones[ i ][j-1].valor() + puntaje(VACIO, cadena2.charAt(j-1));
+                int valor = maximo(diagonal, superior, anterior);
                 
                 alineaciones[i][j] = new Alineacion( valor );
+                
+                if (valor == diagonal) {
+                    alineaciones[i][j].desde(Alineacion.Origen.diagonal);
+                }
+                
+                if (valor == anterior) {
+                    alineaciones[i][j].desde(Alineacion.Origen.anterior);
+                }
+                
+                if (valor == superior) {
+                    alineaciones[i][j].desde(Alineacion.Origen.superior);
+                }
             }
         }
     }
@@ -74,17 +88,98 @@ public class AlinearCadenas {
     
     public int valor() {
 
-        return alineaciones[alineaciones.length - 1][alineaciones[alineaciones.length - 1].length - 1].valor();
+        return alineacionOptima().valor();
     }
 
-    public int puntaje(char caracter1, char caracter2) {
+    private Alineacion alineacionOptima() {
         
-        return caracter1 == caracter2 ? 1 : -1;
+        return alineaciones[columnas() - 1][filas() - 1];
+    }
+
+    private int filas() {
+        
+        return alineaciones[columnas() - 1].length;
     }
     
+    private int columnas() {
+        
+        return alineaciones.length;
+    }
+    
+    public int puntaje(char caracter1, char caracter2) {
+        
+        return caracter1 == caracter2 ? 1 : 0;
+    }
+    
+    public String cadena1Alineada() {
+     
+        String cadena1Alineada = "";
+        
+        int i = columnas() - 1;
+        int j = filas() - 1;
+        
+        do {
+            
+            Alineacion alineacion = alineaciones[i][j];
+            
+            Alineacion.Origen origen = alineacion.origenes().get(0);
+            
+            switch (origen) {
+            
+                case diagonal:
+                    j--;
+                case anterior:
+                    cadena1Alineada = cadena1.charAt(i - 1) + cadena1Alineada;
+                    i--;
+                    break;
+                case superior:
+                    cadena1Alineada = VACIO + cadena1Alineada;
+                    j--;
+                    break;
+            }
+
+        } while ((i > 0) && (j > 0));
+        
+        return cadena1Alineada.toString();
+    }
+    
+
+    public String cadena2Alineada() {
+
+        String cadena2Alineada = "";
+        
+        int i = columnas() - 1;
+        int j = filas() - 1;
+        
+        do {
+            
+            Alineacion alineacion = alineaciones[i][j];
+            
+            Alineacion.Origen origen = alineacion.origenes().get(0);
+            
+            switch (origen) {
+            
+                case diagonal:
+                    i--;
+                case superior:
+                    cadena2Alineada = cadena2.charAt(j - 1) + cadena2Alineada;
+                    j--;
+                    break;
+                case anterior:
+                    cadena2Alineada = VACIO + cadena2Alineada;
+                    i--;
+                    break;
+            }
+
+        } while ((i > 0) && (j > 0));
+        
+        return cadena2Alineada.toString();
+    }
+
     public static class Alineacion {
         
         private int valor;
+        private List<Origen> origenes = new LinkedList<>();
         
         public Alineacion(int nuevoValor) {
             
@@ -95,5 +190,23 @@ public class AlinearCadenas {
             
             return valor;
         }
+        
+        public void desde(Origen origen) {
+            
+            origenes.add(origen);
+        }
+        
+        public List<Origen> origenes() {
+            
+            return origenes;
+        }
+        
+        public enum Origen {
+            
+            diagonal,
+            superior,
+            anterior;
+        }
     }
+
 }

@@ -35,14 +35,14 @@ public class AlinearCadenas {
         for (int i = 1; i < alineaciones.length; i++) {
             
             int valor = alineaciones[i-1][0].valor() + puntaje(cadena1.charAt(i-1), VACIO);
-            alineaciones[i][0] = new AlineacionParcial( valor );
+            alineaciones[i][0] = new AlineacionParcial( valor, Origen.anterior );
         }
         
         /* condición inicial para V(0, j) */
         for (int j = 1; j < alineaciones[0].length; j++) {
             
             int valor = alineaciones[0][j-1].valor() + puntaje(VACIO, cadena2.charAt(j-1));
-            alineaciones[0][j] = new AlineacionParcial( valor );
+            alineaciones[0][j] = new AlineacionParcial( valor, Origen.superior );
         }
         
         /* calcula V(i,j) */
@@ -128,6 +128,12 @@ public class AlinearCadenas {
             valor = nuevoValor;
         }
         
+        public AlineacionParcial(int nuevoValor, Origen origen) {
+            
+            valor = nuevoValor;
+            desde(origen);
+        }
+
         public int valor() {
             
             return valor;
@@ -212,7 +218,7 @@ public class AlinearCadenas {
                         break;
                 }
 
-            } while ((i > 0) && (j > 0));
+            } while ((i > 0) || (j > 0));
         }
     }
 }

@@ -1,9 +1,11 @@
 package ar.uba.fi.cadenas;
 
-import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.MatcherAssert.*;
 
 import org.junit.Test;
+
+import ar.uba.fi.cadenas.AlinearCadenas.Alineacion;
 
 public class TestAlinearCadenas {
 
@@ -83,7 +85,7 @@ public class TestAlinearCadenas {
         
         alinear.ejecutar();
         
-        assertThat("cadena1 alineada", alinear.cadena1Alineada(), is( equalTo( "casa" )));
+        assertThat("cadena1 alineada", alinear.alineacion().cadena1(), is( equalTo( "casa" )));
     }
 
     @Test
@@ -93,7 +95,7 @@ public class TestAlinearCadenas {
         
         alinear.ejecutar();
         
-        assertThat("cadena2 alineada", alinear.cadena2Alineada(), is( equalTo( "caza" )));
+        assertThat("cadena2 alineada", alinear.alineacion().cadena2(), is( equalTo( "caza" )));
     }
 
     @Test
@@ -103,7 +105,7 @@ public class TestAlinearCadenas {
         
         alinear.ejecutar();
         
-        assertThat("cadena1 alineada", alinear.cadena1Alineada(), is( equalTo( "ca~sa" )));
+        assertThat("cadena1 alineada", alinear.alineacion().cadena1(), is( equalTo( "ca~sa" )));
     }
 
     @Test
@@ -113,7 +115,7 @@ public class TestAlinearCadenas {
         
         alinear.ejecutar();
         
-        assertThat("cadena2 alineada", alinear.cadena2Alineada(), is( equalTo( "ca~sa" )));
+        assertThat("cadena2 alineada", alinear.alineacion().cadena2(), is( equalTo( "ca~sa" )));
     }
     
     @Test
@@ -122,8 +124,24 @@ public class TestAlinearCadenas {
         AlinearCadenas alinear = new AlinearCadenas("cacdbd", "cacbbdb");
         
         alinear.ejecutar();
+        Alineacion alineacion = alinear.alineacion();
         
-        assertThat("cadena1 alineada", alinear.cadena1Alineada(), is( equalTo( "cac~~dbd" )));
-        assertThat("cadena2 alineada", alinear.cadena2Alineada(), is( equalTo( "cacbbdb~" )));
+        assertThat("cadena1 alineada", alineacion.cadena1(), is( equalTo( "cac~~dbd" )));
+        assertThat("cadena2 alineada", alineacion.cadena2(), is( equalTo( "cacbbdb~" )));
+    }
+    
+    @Test
+    public void obtenerAlineacion() {
+        
+        AlinearCadenas alinear = new AlinearCadenas("carta", "casa");
+        
+        alinear.ejecutar();
+        
+        Alineacion alineacion = alinear.alineacion(); 
+        
+        assertThat(alineacion, is( notNullValue( )));
+        assertThat(alineacion.valor(), is( equalTo( 3 )));
+        assertThat(alineacion.cadena1(), is( equalTo( "carta" )));
+        assertThat(alineacion.cadena2(), is( equalTo( "ca~sa" )));
     }
 }

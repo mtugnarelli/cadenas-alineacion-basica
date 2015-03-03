@@ -144,4 +144,18 @@ public class TestAlinearCadenas {
         assertThat(alineacion.cadena1(), is( equalTo( "carta" )));
         assertThat(alineacion.cadena2(), is( equalTo( "ca~sa" )));
     }
+    
+    @Test
+    public void definirPeso() {
+        
+        AlinearCadenas alinear = new AlinearCadenas("casa","taza");
+
+        alinear.puntuar('c', 't', 5).puntuar('z', 's', -2);
+        alinear.ejecutar();
+        assertThat(alinear.valor(), is( equalTo( 7 )));
+        
+        Alineacion alineacion = alinear.alineacion();
+        assertThat(alineacion.cadena1(), is( equalTo( "ca~sa" )));
+        assertThat(alineacion.cadena2(), is( equalTo( "taz~a" )));
+    }
 }

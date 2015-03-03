@@ -2,6 +2,8 @@ package ar.uba.fi.cadenas;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class AlinearCadenas {
 
@@ -9,12 +11,15 @@ public class AlinearCadenas {
     private String cadena1;
     private String cadena2;
     private AlineacionParcial[][] alineaciones;
+    private Map<Character, Map<Character, Integer>> puntajes;
 
+    
     public AlinearCadenas(String cadena1, String cadena2) {
 
         this.cadena1 = cadena1;
         this.cadena2 = cadena2;
         this.alineaciones = new AlineacionParcial[cadena1.length() + 1][cadena2.length() + 1];
+        this.puntajes = new TreeMap<>();
     }
 
     public String cadena1() {
@@ -109,8 +114,48 @@ public class AlinearCadenas {
     }
     
     public int puntaje(char caracter1, char caracter2) {
+     
+        Integer valor = null;
         
-        return caracter1 == caracter2 ? 1 : 0;
+        Map<Character, Integer> puntaje = puntajes.get(caracter1);
+        
+        if (puntaje != null) {
+            
+            valor = puntaje.get(caracter2);
+        }
+
+        if (valor == null) {
+            
+            puntaje = puntajes.get(caracter2);
+            
+            if (puntaje != null) {
+                
+                valor = puntaje.get(caracter1);
+            }
+        }
+        
+        if (valor == null) {
+                        
+            /* valor por defecto para los puntajes */
+            valor = caracter1 == caracter2 ? 1 : 0; 
+        }
+        
+        return valor; 
+    }
+    
+    public AlinearCadenas puntuar(char caracter1, char caracter2, int valor) {
+
+        Map<Character, Integer> puntaje = puntajes.get(caracter1);
+        
+        if (puntaje == null) {
+            
+            puntaje = new TreeMap<>();
+            puntajes.put(caracter1, puntaje);
+        }
+        
+        puntaje.put(caracter2, valor);
+
+        return this;
     }
 
     public Alineacion alineacion() {
@@ -157,6 +202,32 @@ public class AlinearCadenas {
         anterior;
     }
     
+    public class Puntaje implements Comparable<Puntaje> {
+
+        private final char caracter1;
+        private final char caracter2;
+        private final int valor;
+        
+        public Puntaje(char caracter1, char caracter2, int valor) {
+
+            this.caracter1 = caracter1;
+            this.caracter2 = caracter2;
+            this.valor = valor;
+        }
+        
+        @Override
+        public int compareTo(Puntaje otro) {
+
+            return (caracter1 - otro.caracter1) + (caracter2 - otro.caracter2);
+        }
+        
+        public int valor() {
+            
+            return this.valor;
+        }
+        
+    }
+
     public class Alineacion {
         
         private String cadena1Alineada;
@@ -221,4 +292,5 @@ public class AlinearCadenas {
             } while ((i > 0) || (j > 0));
         }
     }
+
 }

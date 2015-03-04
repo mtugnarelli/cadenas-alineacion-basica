@@ -268,25 +268,28 @@ public class AlinearCadenas {
                 
                 AlineacionParcial alineacionParcial = alineaciones[i][j];
 
-                /* toma la primer alternativa registrada */
-                switch (alineacionParcial.origenes().get(0)) {
-                
-                    case diagonal:
-                        j--;
-                        i--;
-                        cadena1Alineada = cadena1.charAt(i) + cadena1Alineada;
-                        cadena2Alineada = cadena2.charAt(j) + cadena2Alineada;
-                        break;
-                    case anterior:
-                        i--;
-                        cadena1Alineada = cadena1.charAt(i) + cadena1Alineada;
-                        cadena2Alineada = VACIO + cadena2Alineada;
-                        break;
-                    case superior:
-                        j--;
-                        cadena2Alineada = cadena2.charAt(j) + cadena2Alineada;
-                        cadena1Alineada = VACIO + cadena1Alineada;
-                        break;
+                if (! alineacionParcial.origenes().isEmpty()) {
+                    
+                    /* toma la primer alternativa registrada */
+                    switch (alineacionParcial.origenes().get(0)) {
+                    
+                        case diagonal:
+                            j--;
+                            i--;
+                            cadena1Alineada = cadena1.charAt(i) + cadena1Alineada;
+                            cadena2Alineada = cadena2.charAt(j) + cadena2Alineada;
+                            break;
+                        case anterior:
+                            i--;
+                            cadena1Alineada = cadena1.charAt(i) + cadena1Alineada;
+                            cadena2Alineada = VACIO + cadena2Alineada;
+                            break;
+                        case superior:
+                            j--;
+                            cadena2Alineada = cadena2.charAt(j) + cadena2Alineada;
+                            cadena1Alineada = VACIO + cadena1Alineada;
+                            break;
+                    }
                 }
 
             } while ((i > 0) || (j > 0));

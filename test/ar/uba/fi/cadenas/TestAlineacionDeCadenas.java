@@ -16,12 +16,12 @@ import ar.uba.fi.cadenas.AlinearCadenas.Alineacion;
 @RunWith(Parameterized.class)
 public class TestAlineacionDeCadenas {
 
-    private AlinearCadenas alinear;
+    protected AlinearCadenas alinear;
     private String cadena1AlineadaEsperada;
     private String cadena2AlineadaEsperada;
     
     public TestAlineacionDeCadenas(String cadena1, String cadena2, 
-                                                String cadena1Alineada, String cadena2Alineada) {
+                                   String cadena1Alineada, String cadena2Alineada) {
         
         alinear = new AlinearCadenas(cadena1, cadena2);
         cadena1AlineadaEsperada = cadena1Alineada;
@@ -39,23 +39,23 @@ public class TestAlineacionDeCadenas {
     }
     
     @Parameters(name = "{0} | {1}")
-    public static Collection<Object[]> obtenerParametros() {
+    public static Collection<String[]> obtenerParametros() {
 
         return tests(
                     test("distancia", "estancia", "distancia", "~estancia"),
                     test("mira", "mirador", "mira~~~", "mirador"),
                     test("muro", "marmol", "mur~o~", "marmol"),
                     test("aaggctttaaagc", "atggtaaagaat", "aaggctttaaag~~c", "atgg~~~taaagaat")
-                    
                 );
     }
     
-    protected static Object[] test(Object... parametros) {
+    protected static String[] test(String cadena1, String cadena2, 
+                                   String cadena1Alineada, String cadena2Alineada) {
         
-        return parametros;
+        return new String[] { cadena1, cadena2, cadena1Alineada, cadena2Alineada };
     }
     
-    protected static Collection<Object[]> tests(Object[]... parametros) {
+    protected static Collection<String[]> tests(String[]... parametros) {
         
         return Arrays.asList(parametros);
     }
